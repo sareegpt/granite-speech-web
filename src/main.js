@@ -25,15 +25,17 @@ worker.addEventListener("message", (e) => {
     progressWrap.hidden = false;
     const { file, loaded, total } = e.data;
     fileProgress[file] = { loaded, total };
-    const totalLoaded = Object.values(fileProgress).reduce((s, f) => s + f.loaded, 0);
-    const totalSize = Object.values(fileProgress).reduce((s, f) => s + f.total, 0);
+    const totalLoaded = Object.values(fileProgress).reduce(
+      (s, f) => s + f.loaded,
+      0
+    );
+    const totalSize = Object.values(fileProgress).reduce(
+      (s, f) => s + f.total,
+      0
+    );
     const pct = totalSize > 0 ? (totalLoaded / totalSize) * 100 : 0;
     progressBar.style.width = `${pct.toFixed(1)}%`;
     progressText.textContent = `${(totalLoaded / 1e6).toFixed(0)} / ${(totalSize / 1e6).toFixed(0)} MB`;
-  }
-
-  if (type === "progress-done") {
-    // individual file done
   }
 
   if (type === "ready") {
@@ -42,9 +44,14 @@ worker.addEventListener("message", (e) => {
     recordBtn.disabled = false;
   }
 
-  if (type === "result") {
+  if (type === "token") {
     outputWrap.hidden = false;
-    outputEl.value += (outputEl.value ? "\n" : "") + e.data.text;
+    outputEl.value += e.data.token;
+    outputEl.scrollTop = outputEl.scrollHeight;
+  }
+
+  if (type === "done") {
+    outputEl.value += "\n";
     statusEl.textContent = "Ready — hold button to record";
     recordBtn.disabled = false;
     recordBtn.textContent = "Hold to Record";
@@ -78,13 +85,16 @@ async function startRecording() {
     audio: {
       channelCount: 1,
       sampleRate: 16000,
+      echoCancellation: false,
+      noiseSuppression: false,
+      autoGainControl: false,
     },
   });
 
+  // Create context at 16kHz so browser handles resampling
   audioContext = new AudioContext({ sampleRate: 16000 });
   sourceNode = audioContext.createMediaStreamSource(mediaStream);
 
-  // Use ScriptProcessor to capture raw PCM (AudioWorklet would be better but more setup)
   processorNode = audioContext.createScriptProcessor(4096, 1, 1);
   processorNode.onaudioprocess = (e) => {
     if (!isRecording) return;
@@ -102,7 +112,6 @@ function stopRecording() {
   recordBtn.textContent = "Transcribing…";
   recordBtn.disabled = true;
 
-  // Cleanup audio
   if (processorNode) {
     processorNode.disconnect();
     processorNode = null;

@@ -10,7 +10,7 @@
   "license": "Apache-2.0",
   "description": "Browser-based speech-to-text using IBM Granite 4.0 1B Speech (ONNX)",
   "dependencies": {
-    "@huggingface/transformers": "^3.8.1"
+    "@huggingface/transformers": "^4.0.0-next.7"
   },
   "devDependencies": {
     "vite": "^8.0.2"
