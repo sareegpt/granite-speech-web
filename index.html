@@ -3,23 +3,80 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' blob:; worker-src 'self' blob:; connect-src 'self' https://huggingface.co https://cdn-lfs.hf.co https://cdn-lfs-us-1.hf.co https://cdn-lfs-eu-1.hf.co; style-src 'self';">
   <title>Granite Speech</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <div id="app">
     <h1>Granite Speech</h1>
+    <p class="privacy-note">Fully private — runs 100% in your browser. Audio never leaves your device.</p>
     <p id="status">Loading model…</p>
     <div id="progress-wrap" hidden>
       <div id="progress-bar"></div>
       <span id="progress-text"></span>
     </div>
 
+    <div id="controls">
+      <div class="control-group">
+        <label for="output-lang">Output</label>
+        <select id="output-lang">
+          <option value="transcribe" selected>Original (transcribe)</option>
+          <option value="en">English</option>
+          <option value="es">Spanish</option>
+          <option value="fr">French</option>
+          <option value="de">German</option>
+          <option value="pt">Portuguese</option>
+          <option value="ja">Japanese</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="keywords">Keywords</label>
+        <input id="keywords" type="text" placeholder="Names, acronyms…" />
+      </div>
+
+      <div class="control-group">
+        <label for="continuous-toggle">Continuous</label>
+        <button id="continuous-toggle" class="toggle-btn">Off</button>
+      </div>
+    </div>
+
     <button id="record-btn" disabled>Hold to Record</button>
+
+    <!-- Review panel for translation mode -->
+    <div id="review-panel" hidden>
+      <div class="review-step">
+        <div class="review-header">
+          <span class="review-label">Detected</span>
+          <span id="detected-lang" class="lang-badge"></span>
+        </div>
+        <textarea id="review-detected" placeholder="Detected speech…"></textarea>
+      </div>
+
+      <div class="review-arrow">&#8595;</div>
+
+      <div class="review-step">
+        <div class="review-header">
+          <span class="review-label" id="translation-label">Translation</span>
+          <button id="retranslate-btn" class="small-btn" hidden>Re-translate</button>
+        </div>
+        <textarea id="review-translated" placeholder="Translation…"></textarea>
+      </div>
+
+      <div class="review-actions">
+        <button id="accept-btn" class="primary-btn">Accept</button>
+        <button id="discard-btn">Discard</button>
+      </div>
+    </div>
 
     <div id="output-wrap" hidden>
       <textarea id="output" readonly placeholder="Transcription will appear here…"></textarea>
-      <button id="copy-btn">Copy</button>
+      <div id="output-actions">
+        <button id="copy-btn">Copy</button>
+        <button id="export-btn">Export .txt</button>
+        <button id="clear-btn">Clear</button>
+      </div>
     </div>
   </div>
   <script type="module" src="/src/main.js"></script>
