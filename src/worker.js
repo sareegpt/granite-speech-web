@@ -69,7 +69,7 @@ self.addEventListener("message", async (e) => {
       const isTranslation = outputLang && outputLang !== "transcribe";
       // Sanitize keywords: allow only alphanumeric, spaces, commas, hyphens, apostrophes
       const rawKw = (keywords || "").trim().replace(/[^\w\s,\-']/g, "");
-      let kw = rawKw ? `. Keywords: ${rawKw}` : "";
+      let kw = rawKw ? ` Keywords: ${rawKw}` : "";
 
       // Step 1: Always transcribe first
       self.postMessage({ type: "status", message: "Transcribing…" });
