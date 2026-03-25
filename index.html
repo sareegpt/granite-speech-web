@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Granite Speech</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="app">
+    <h1>Granite Speech</h1>
+    <p id="status">Loading model…</p>
+    <div id="progress-wrap" hidden>
+      <div id="progress-bar"></div>
+      <span id="progress-text"></span>
+    </div>
+
+    <button id="record-btn" disabled>Hold to Record</button>
+
+    <div id="output-wrap" hidden>
+      <textarea id="output" readonly placeholder="Transcription will appear here…"></textarea>
+      <button id="copy-btn">Copy</button>
+    </div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
